@@ -33,16 +33,22 @@ app.post('/todos', authenticate, async (req, res) => {
   // });
 });
 
-app.get('/todos', authenticate, (req, res) => {
-  Todo.find({
-    _creator: req.user._id
-  }).then((todos) => {
-    res.send({
-      todos,
-    });
-  }, (e) => {
+app.get('/todos', authenticate, async (req, res) => {
+  try {
+    const todos = await Todo.find({ _creator: req.user._id });
+    res.send({ todos });
+  } catch(e) {
     res.status(400).send(e);
-  });
+  }
+  // Todo.find({
+  //   _creator: req.user._id
+  // }).then((todos) => {
+  //   res.send({
+  //     todos,
+  //   });
+  // }, (e) => {
+  //   res.status(400).send(e);
+  // });
 });
 
 app.get('/todos/:id', authenticate, (req, res) => {
